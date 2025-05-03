@@ -1,7 +1,22 @@
+[build-system]
+requires = [
+    "flit_core >=3.2,<4",
+]
+build-backend = "flit_core.buildapi"
+
 [project]
 name = "fraude"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "kagglehub[pandas-datasets]>=0.3.12",
+]
+
+[dependency-groups]
+dev = [
+    "ipywidgets>=8.1.6",
+    "jupyterlab>=4.4.1",
+    "ydata-profiling>=4.16.1",
+]
