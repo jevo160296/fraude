@@ -1,5 +1,5 @@
 import pandas as pd
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
@@ -62,7 +62,7 @@ def predict(features: DataFrame, model):
     """
     return model.predict(features)
 
-def evaluate(features: DataFrame, target: DataFrame, model):
+def evaluate(y_true: Series, y_predict: Series):
     """
     Evalúa un modelo utilizando una matriz de confusión.
 
@@ -78,8 +78,7 @@ def evaluate(features: DataFrame, target: DataFrame, model):
     Returns:
         np.ndarray: Matriz de confusión.
     """
-    predictions = predict(features, model)
-    return confusion_matrix(target, predictions, labels=[0, 1])
+    return confusion_matrix(y_true, y_predict, labels=[0, 1])
 
 def calculate_metrics(conf_matrix):
     """
