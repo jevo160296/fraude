@@ -16,3 +16,18 @@ def save_cleaned_data(project_path: Path, cleaned_data: DataFrame):
 def load_cleaned_data(project_path: Path):
     path = get_cleaned_data_path(project_path)
     return pd.read_csv(path, parse_dates=['date'])
+
+def get_features_data_path(project_path: Path):
+    path = project_path / "data/processed/fraude_features.csv"
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True)
+    return path
+
+def save_features_data(project_path: Path, features_data: DataFrame):
+    path = get_features_data_path(project_path)
+    features_data.to_csv(path, index=False)
+    return path
+
+def load_features_data(project_path: Path):
+    path = get_features_data_path(project_path)
+    return pd.read_csv(path, parse_dates=['date'])
