@@ -12,11 +12,13 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "kagglehub[pandas-datasets]>=0.3.12",
+    "scikit-learn>=1.6.1",
 ]
 
 [dependency-groups]
 dev = [
     "ipywidgets>=8.1.6",
     "jupyterlab>=4.4.1",
+    "plotly>=6.0.1",
     "ydata-profiling>=4.16.1",
 ]
