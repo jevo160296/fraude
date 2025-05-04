@@ -49,6 +49,19 @@ def train(features: DataFrame, target: DataFrame):
     model.fit(features, target)
     return model
 
+def predict(features: DataFrame, model):
+    """
+    Realiza predicciones utilizando un modelo de clasificación.
+
+    Args:
+        features (pd.DataFrame): DataFrame con las características.
+        model: Modelo que tiene el método predict.
+
+    Returns:
+        np.ndarray: Predicciones del modelo.
+    """
+    return model.predict(features)
+
 def evaluate(features: DataFrame, target: DataFrame, model):
     """
     Evalúa un modelo utilizando una matriz de confusión.
@@ -65,8 +78,8 @@ def evaluate(features: DataFrame, target: DataFrame, model):
     Returns:
         np.ndarray: Matriz de confusión.
     """
-    predictions = model.predict(features)
-    return confusion_matrix(target, predictions, labels=[1, 0])
+    predictions = predict(features, model)
+    return confusion_matrix(target, predictions, labels=[0, 1])
 
 def calculate_metrics(conf_matrix):
     """
