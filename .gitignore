@@ -8,8 +8,5 @@ wheels/
 
 # Virtual environments
 .venv
-data/input/Fraud.csv
-data/processed/fraude_cleaned.csv
-data/processed/fraude_features.csv
-fraude/catalog.py
-models/model.jbl
+data/*
+models/*
