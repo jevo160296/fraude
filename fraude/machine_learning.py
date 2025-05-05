@@ -100,7 +100,15 @@ def calculate_metrics(conf_matrix):
     false_negative_rate = fn / (fn + tp) if (fn + tp) > 0 else 0
     error_rate = 1 - accuracy
 
-    return {
+    int_metrics = {
+        "tn": tn,
+        "fp": fp,
+        "fn": fn,
+        "tp": tp,
+        "total": tn + fp + fn + tp
+    }
+    
+    float_metrics = {
         "accuracy": accuracy,
         "precision": precision,
         "recall": recall,
@@ -110,24 +118,4 @@ def calculate_metrics(conf_matrix):
         "error_rate": error_rate
     }
 
-def save_model(model, path: str):
-    """
-    Guarda un modelo de sklearn en un archivo.
-
-    Args:
-        model: Modelo de sklearn a guardar.
-        path (str): Ruta donde se guardará el modelo.
-    """
-    joblib.dump(model, path)
-
-def load_model(path: str):
-    """
-    Carga un modelo de sklearn desde un archivo.
-
-    Args:
-        path (str): Ruta del archivo del modelo.
-
-    Returns:
-        Modelo de sklearn cargado.
-    """
-    return joblib.load(path)
+    return int_metrics, float_metrics
