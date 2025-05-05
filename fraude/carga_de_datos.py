@@ -1,10 +1,7 @@
+from .catalog import get_fraude_path, load_fraude_data
 import kagglehub
 import pandas as pd
-from kagglehub import KaggleDatasetAdapter
 from pathlib import Path
-
-def get_fraude_path(project_path):
-    return project_path / 'data/input/Fraud.csv'
 
 def replace_file(cur_path: Path, new_path: Path) -> Path:
     if new_path.exists():
@@ -13,8 +10,8 @@ def replace_file(cur_path: Path, new_path: Path) -> Path:
     return new_path
 
 def get_fraude_dataset(project_path: Path) -> pd.DataFrame:
-    fraude_path = download_datasets_if_not_exists(project_path)
-    return pd.read_csv(fraude_path)
+    download_datasets_if_not_exists(project_path)
+    return load_fraude_data(project_path)
 
 def download_datasets_if_not_exists(project_path: Path) -> Path:
     fraude_path = get_fraude_path(project_path)
