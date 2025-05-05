@@ -11,3 +11,20 @@ class bcolors:
     
     def stylize(text: str, style: str):
         return f"{style}{text}{bcolors.ENDC}"
+    
+def validate_dataset(df, expected_columns):
+    """
+    Validate the dataset against expected columns.
+    
+    Args:
+        df (pd.DataFrame): The DataFrame to validate.
+        expected_columns (list): List of expected column names.
+        
+    Returns:
+        bool: True if the dataset is valid, False otherwise.
+    """
+    missing_columns = set(expected_columns) - set(df.columns)
+    if missing_columns:
+        print(bcolors.stylize("Missing columns:", bcolors.FAIL), {missing_columns})
+        return False
+    return True

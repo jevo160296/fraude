@@ -3,7 +3,7 @@ from pandas import DataFrame, Series
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
-import joblib
+from sklearn.preprocessing import OneHotEncoder
 
 def split(dataframe: DataFrame, train_size: float=0.7):
     """
@@ -19,7 +19,7 @@ def split(dataframe: DataFrame, train_size: float=0.7):
     train_df, test_df = train_test_split(dataframe, test_size=1-train_size, random_state=42)
     return train_df, test_df
 
-def features_extract(dataframe: DataFrame) -> DataFrame:
+def features_extract(dataframe: DataFrame, transformer: OneHotEncoder = None) -> tuple[DataFrame, OneHotEncoder]:
     """
     Transforma un dataframe con las características originales para ser utilizado en un modelo RandomForest.
 
@@ -31,8 +31,16 @@ def features_extract(dataframe: DataFrame) -> DataFrame:
     """
     transformed_df = dataframe.copy()
     # Convertir la columna categórica 'type' a variables dummy
-    transformed_df = pd.get_dummies(transformed_df, columns=['type'], drop_first=True)
-    return transformed_df
+    if transformer is None:
+        transformer = OneHotEncoder(drop='first')
+        X = transformer.fit_transform(transformed_df[['type']])
+    else:
+        X = transformer.transform(transformed_df[['type']])
+    transformed_df = transformed_df.drop(columns=['type'])
+    # Crear un nuevo dataframe con las variables dummy y la columna 'amount'
+    new_df = pd.DataFrame(X.todense(), columns=transformer.get_feature_names_out(['type']))
+    new_df['amount'] = transformed_df['amount'].values
+    return new_df, transformer
 
 def train(features: DataFrame, target: DataFrame):
     """
@@ -45,7 +53,7 @@ def train(features: DataFrame, target: DataFrame):
     Returns:
         RandomForestClassifier: Modelo entrenado.
     """
-    model = RandomForestClassifier(random_state=42)
+    model = RandomForestClassifier(random_state=42, n_jobs=-1)
     model.fit(features, target)
     return model
 

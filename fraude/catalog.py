@@ -1,7 +1,8 @@
 import pandas as pd
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from pathlib import Path
 import joblib
+from numpy import ndarray
 
 def get_fraude_path(project_path):
     path = project_path / 'data/input/Fraud.csv'
@@ -17,6 +18,33 @@ def save_fraude_data(project_path: Path, fraude: DataFrame):
 def load_fraude_data(project_path: Path):
     path = get_fraude_path(project_path)
     return pd.read_csv(path)
+
+def get_inference_data_path(project_path: Path):
+    path = project_path / "data/inference/fraude_inference.csv"
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True)
+    return path
+
+def save_inference_data(project_path: Path, inference_data: DataFrame):
+    path = get_inference_data_path(project_path)
+    inference_data.to_csv(path, index=False)
+    return path
+
+def load_inference_data(project_path: Path):
+    path = get_inference_data_path(project_path)
+    return pd.read_csv(path)
+
+def get_predictions_path(project_path: Path):
+    path = project_path / "data/inference/fraude_predictions.csv"
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True)
+    return path
+
+def save_predictions(project_path: Path, predictions: ndarray):
+    path = get_predictions_path(project_path)
+    predictions_series = Series(predictions, name='prediction')
+    predictions_series.to_csv(path, index=False)
+    return path
 
 def get_cleaned_data_path(project_path: Path):
     path = project_path / "data/processed/fraude_cleaned.csv"
@@ -76,4 +104,34 @@ def load_model(project_path: Path):
         Modelo de sklearn cargado.
     """
     path = get_model_path(project_path)
+    return joblib.load(path)
+
+def get_transformer_path(project_path: Path):
+    path = project_path / "models/transformer.jbl"
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True)
+    return path
+
+def save_transformer(project_path: Path, transformer):
+    """
+    Guarda un transformador de sklearn en un archivo.
+
+    Args:
+        transformer: Transformador de sklearn a guardar.
+        path (str): Ruta donde se guardará el transformador.
+    """
+    path = get_transformer_path(project_path)
+    joblib.dump(transformer, path)
+
+def load_transformer(project_path: Path):
+    """
+    Carga un transformador de sklearn desde un archivo.
+
+    Args:
+        path (str): Ruta del archivo del transformador.
+
+    Returns:
+        Transformador de sklearn cargado.
+    """
+    path = get_transformer_path(project_path)
     return joblib.load(path)

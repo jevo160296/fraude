@@ -5,7 +5,8 @@ requires = [
 build-backend = "flit_core.buildapi"
 
 [project.scripts]
-fraude = "main:main"
+train = "main:train"
+inference = "main:inference"
 
 [project]
 name = "fraude"
