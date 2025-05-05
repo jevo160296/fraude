@@ -16,7 +16,7 @@ def split(dataframe: DataFrame, train_size: float=0.7):
     Returns:
         pd.DataFrame, pd.DataFrame: Dataframes de entrenamiento y prueba.
     """
-    train_df, test_df = train_test_split(dataframe, test_size=1-train_size, random_state=42)
+    train_df, test_df = train_test_split(dataframe, test_size=1-train_size, random_state=42, stratify=dataframe['type'])
     return train_df, test_df
 
 def features_extract(dataframe: DataFrame, transformer: OneHotEncoder = None) -> tuple[DataFrame, OneHotEncoder]:
