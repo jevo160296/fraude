@@ -1,8 +1,10 @@
+from fraude.utilities import bcolors
+
 def get_data_pipeline(project_path):
     """
     Get the data pipeline for the project.
     """
-    print("Running get data pipeline...")
+    print(bcolors.stylize("Running get data pipeline...", bcolors.OKGREEN))
     from fraude import get_fraude_dataset
     return get_fraude_dataset(project_path)
 
@@ -10,7 +12,7 @@ def clean_data_pipeline(project_path):
     """
     Clean the data pipeline for the project.
     """
-    print("Running clean data pipeline...")
+    print(bcolors.stylize("Running clean data pipeline...", bcolors.OKGREEN))
     from fraude import clean_column_names, fix_datetime_columns, remove_outliers, remove_zeros, save_cleaned_data
     from fraude.catalog import load_fraude_data
     fraude = load_fraude_data(project_path)
@@ -25,7 +27,7 @@ def add_features_pipeline(project_path):
     """
     Add features to the data pipeline for the project.
     """
-    print("Running add features pipeline...")
+    print(bcolors.stylize("Running add features pipeline...", bcolors.OKGREEN))
     from fraude import add_week_day, split_city, save_features_data
     from fraude.catalog import load_cleaned_data
     fraude = load_cleaned_data(project_path)
@@ -38,7 +40,7 @@ def train_model_pipeline(project_path):
     """
     Train the model pipeline for the project.
     """
-    print("Running train model pipeline...")
+    print(bcolors.stylize("Running train model pipeline...", bcolors.OKGREEN))
     from fraude import train, get_features, get_target, split, features_extract
     from fraude.catalog import load_features_data, save_model
     fraude = load_features_data(project_path)
@@ -52,23 +54,12 @@ def train_model_pipeline(project_path):
     save_model(project_path, model)
     return model
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
 def evaluate_model_pipeline(project_path):
     """
     Evaluate the model pipeline for the project.
     """
-    print("Running evaluate model pipeline...")
-    from fraude import predict, evaluate, get_features, get_target, split, features_extract, calculate_metrics
+    print(bcolors.stylize("Running evaluate model pipeline...", bcolors.OKGREEN))
+    from fraude import predict, evaluate, get_features, get_target, split, features_extract, calculate_metrics, print_metrics
     from fraude.catalog import load_features_data, load_model
     model = load_model(project_path)
     fraude = load_features_data(project_path)
@@ -84,20 +75,14 @@ def evaluate_model_pipeline(project_path):
     y_test_pred = predict(X_test, model)
     confusion_train = evaluate(y_train, y_train_pred)
     confusion_test = evaluate(y_test, y_test_pred)
-    int_metrics_train, float_metrics_train = calculate_metrics(confusion_train)
-    int_metrics_test, float_metrics_test = calculate_metrics(confusion_test)
-    print(f"{bcolors.HEADER}Confusion matrix for train set:{bcolors.ENDC}")
+    metrics_train = calculate_metrics(confusion_train)
+    metrics_test = calculate_metrics(confusion_test)
+    print(bcolors.stylize("Confusion matrix for train set:", bcolors.HEADER))
     print(confusion_train)
-    print(f"{bcolors.HEADER}Confusion matrix for test set:{bcolors.ENDC}")
+    print(bcolors.stylize("Confusion matrix for test set:", bcolors.HEADER))
     print(confusion_test)
-    print(f"{bcolors.HEADER}Metrics for train set:{bcolors.ENDC}")
-    for metric, value in int_metrics_train.items():
-        print(f"{metric}: {value}")
-    for metric, value in float_metrics_train.items():
-        print(f"{metric}: {value:.2%}")
-    print(f"{bcolors.HEADER}Metrics for test set:{bcolors.ENDC}")
-    for metric, value in int_metrics_test.items():
-        print(f"{metric}: {value}")
-    for metric, value in float_metrics_test.items():
-        print(f"{metric}: {value:.2%}")
-    return int_metrics_train, float_metrics_train, int_metrics_test, float_metrics_test
+    print(bcolors.stylize("Metrics for train set:", bcolors.HEADER))
+    print_metrics(metrics_train)
+    print(bcolors.stylize("Metrics for test set:", bcolors.HEADER))
+    print_metrics(metrics_test)
+    return metrics_train, metrics_test

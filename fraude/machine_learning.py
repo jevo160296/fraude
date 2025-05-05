@@ -100,22 +100,33 @@ def calculate_metrics(conf_matrix):
     false_negative_rate = fn / (fn + tp) if (fn + tp) > 0 else 0
     error_rate = 1 - accuracy
 
-    int_metrics = {
-        "tn": tn,
-        "fp": fp,
-        "fn": fn,
-        "tp": tp,
-        "total": tn + fp + fn + tp
-    }
-    
-    float_metrics = {
-        "accuracy": accuracy,
-        "precision": precision,
-        "recall": recall,
-        "f1_score": f1_score,
-        "false_positive_rate": false_positive_rate,
-        "false_negative_rate": false_negative_rate,
-        "error_rate": error_rate
-    }
+    return {
+            "tn": tn,
+            "fp": fp,
+            "fn": fn,
+            "tp": tp,
+            "total": tn + fp + fn + tp,
+            "accuracy": accuracy,
+            "precision": precision,
+            "recall": recall,
+            "f1_score": f1_score,
+            "false_positive_rate": false_positive_rate,
+            "false_negative_rate": false_negative_rate,
+            "error_rate": error_rate
+        }
 
-    return int_metrics, float_metrics
+def print_metrics(metrics):
+    """
+    Imprime las métricas calculadas.
+
+    Args:
+        metrics (dict): Diccionario con las métricas calculadas.
+    """
+    int_metrics = ["tn", "fp", "fn", "tp", "total"]
+    float_metrics = ["accuracy", "precision", "recall", "f1_score", "false_positive_rate", "false_negative_rate", "error_rate"]
+    for metric_name in int_metrics:
+        if metric_name in metrics:
+            print(f"{metric_name}: {metrics[metric_name]}")
+    for metric_name in float_metrics:
+        if metric_name in metrics:
+            print(f"{metric_name}: {metrics[metric_name]:.2%}")
