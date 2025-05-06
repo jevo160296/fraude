@@ -1,10 +1,10 @@
-from fraude.utilities import bcolors
+from fraude.utilities import bcolors, theme
 
 def get_data_pipeline(project_path):
     """
     Get the data pipeline for the project.
     """
-    print(bcolors.stylize("Running get data pipeline...", bcolors.OKGREEN))
+    print(theme.pipeline_status("Get data", "RUNNING"))
     from fraude import get_fraude_dataset
     return get_fraude_dataset(project_path)
 
@@ -12,7 +12,7 @@ def clean_data_pipeline(project_path, fraude = None):
     """
     Clean the data pipeline for the project.
     """
-    print(bcolors.stylize("Running clean data pipeline...", bcolors.OKGREEN))
+    print(theme.pipeline_status("Clean data", "RUNNING"))
     from fraude import clean_column_names, fix_datetime_columns, remove_outliers, remove_zeros, save_cleaned_data
     from fraude.catalog import load_fraude_data
     from fraude.utilities import validate_dataset
@@ -28,7 +28,7 @@ def add_features_pipeline(project_path, fraude = None):
     """
     Add features to the data pipeline for the project.
     """
-    print(bcolors.stylize("Running add features pipeline...", bcolors.OKGREEN))
+    print(theme.pipeline_status("Add features", "RUNNING"))
     from fraude import add_week_day, split_city, save_features_data
     from fraude.catalog import load_cleaned_data
     fraude = load_cleaned_data(project_path) if fraude is None else fraude
@@ -41,7 +41,7 @@ def train_model_pipeline(project_path):
     """
     Train the model pipeline for the project.
     """
-    print(bcolors.stylize("Running train model pipeline...", bcolors.OKGREEN))
+    print(theme.pipeline_status("Train model", "RUNNING"))
     from fraude import train, get_features, get_target, split, features_extract
     from fraude.catalog import load_features_data, save_model, save_transformer
     fraude = load_features_data(project_path)
@@ -60,7 +60,7 @@ def evaluate_model_pipeline(project_path):
     """
     Evaluate the model pipeline for the project.
     """
-    print(bcolors.stylize("Running evaluate model pipeline...", bcolors.OKGREEN))
+    print(theme.pipeline_status("Evaluate model", "RUNNING"))
     from fraude import predict, evaluate, get_features, get_target, split, features_extract, calculate_metrics, print_metrics
     from fraude.catalog import load_features_data, load_model, load_transformer
     fraude = load_features_data(project_path)
@@ -95,7 +95,7 @@ def predict_pipeline(project_path):
     """
     Predict the model pipeline for the project.
     """
-    print(bcolors.stylize("Running predict pipeline...", bcolors.OKGREEN))
+    print(theme.pipeline_status("Predict", "RUNNING"))
     from fraude import predict, get_features, features_extract, get_target
     from fraude.catalog import load_model, load_inference_data, save_predictions, get_predictions_path, load_transformer
     from fraude.utilities import validate_dataset
@@ -110,3 +110,23 @@ def predict_pipeline(project_path):
     y = predict(X, model)
     save_predictions(project_path, y)
     return y, get_predictions_path(project_path)
+
+def single_predict_pipeline(project_path, amount, type):
+    """
+    Run a single prediction pipeline.
+    """
+    print(theme.pipeline_status("Single predict", "RUNNING"))
+    from fraude import get_features, features_extract, predict
+    from fraude.catalog import load_model, load_transformer, load_features_data
+    from fraude.utilities import validate_dataset
+    from pandas import DataFrame
+    model = load_model(project_path)
+    transformer = load_transformer(project_path)
+    fraude = DataFrame({'amount': [amount], 'type': [type]})
+    if not validate_dataset(fraude, ['amount', 'type']):
+        raise ValueError("Dataset does not contain the required columns.")
+    features = get_features()
+    dataset = fraude[features]
+    X, _ = features_extract(dataset[features], transformer)
+    y = predict(X, model)
+    return y

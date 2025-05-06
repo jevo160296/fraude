@@ -2,8 +2,9 @@ import click
 from fraude import get_fraude_dataset, clean_column_names, fix_datetime_columns, remove_outliers, remove_zeros
 from fraude import save_cleaned_data, save_features_data
 from fraude import add_week_day, split_city
-from fraude.pipelines import get_data_pipeline, clean_data_pipeline, add_features_pipeline, train_model_pipeline, evaluate_model_pipeline, predict_pipeline
+from fraude.pipelines import get_data_pipeline, clean_data_pipeline, add_features_pipeline, train_model_pipeline, evaluate_model_pipeline, predict_pipeline, single_predict_pipeline
 from fraude.menu import menu, get_functions
+from fraude.utilities import theme
 from pathlib import Path
 
 @click.command()
@@ -38,9 +39,36 @@ def inference(project_path):
     Run the inference pipeline.
     """
     project_path = Path(project_path).resolve() 
-    _, prediction_path = predict_pipeline(project_path)
+    prediction_path = _inference(project_path)
     print(f"Predictions saved to {prediction_path}")
+
+def _inference(project_path: Path):
+    _, prediction_path = predict_pipeline(project_path)
+    return prediction_path
+
+@click.command()
+@click.option('--project-path', default=Path('.').resolve(), help='Path to the project directory.')
+@click.option('--amount', default=1.0, help='Amount of predictions to make.')
+@click.option('--type', default='single', help='Type of prediction: single or batch.')
+def single_inference(project_path, amount, type):
+    """
+    Run a single inference pipeline.
+    """
+    project_path = Path(project_path).resolve()
+    y = _single_inference(project_path, amount, type)
+    prediction = y[0] if len(y) > 0 else None
+    prediction_text = "Fraude" if prediction == 1 else "No fraude" if prediction == 0 else "No prediction made"
+    print(theme.header(f"Single prediction result: {prediction_text}"))
+
+def _single_inference(project_path, amount, type):
+    """
+    Run a single inference pipeline.
+    """
+    project_path = Path(project_path).resolve()
+    y = single_predict_pipeline(project_path, amount, type)
+    return y
 
 if __name__ == "__main__":
     # _train(project_path=Path('.').resolve(),start_from="5", end_at="5")
-    inference()
+    #_single_inference(project_path=Path('.').resolve(), amount=24074, type='TRANSFER')
+    _inference(project_path=Path('.').resolve())

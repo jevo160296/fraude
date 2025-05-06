@@ -7,6 +7,7 @@ build-backend = "flit_core.buildapi"
 [project.scripts]
 train = "main:train"
 inference = "main:inference"
+single_inference = "main:single_inference"
 
 [project]
 name = "fraude"
