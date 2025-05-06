@@ -53,7 +53,7 @@ def train(features: DataFrame, target: DataFrame):
     Returns:
         RandomForestClassifier: Modelo entrenado.
     """
-    model = RandomForestClassifier(random_state=42, n_jobs=-1)
+    model = RandomForestClassifier(random_state=42, n_jobs=-1,class_weight={0: 1, 1: 5})
     model.fit(features, target)
     return model
 
