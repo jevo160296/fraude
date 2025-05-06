@@ -135,3 +135,18 @@ def load_transformer(project_path: Path):
     """
     path = get_transformer_path(project_path)
     return joblib.load(path)
+
+def get_model_metrics_path(project_path: Path):
+    path = project_path / "models/model_metrics.yaml"
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True)
+    return path
+
+def save_model_metrics(project_path: Path, metrics: dict):
+    """
+    Guarda las métricas del modelo en formato yaml
+    """
+    import yaml
+    path = get_model_metrics_path(project_path)
+    with open(path, 'w+') as file:
+        yaml.safe_dump(metrics, file)
