@@ -49,11 +49,11 @@ if submit or st.session_state[TRANSASCTION_IN_PROGRESS]:
                 auth_code = st.text_input("An authentication code has been sent to your registered email. Please enter it below to confirm the transaction.")
                 confirm_transaction = st.button("Confirm Transaction")
                 if confirm_transaction:
-                    if auth_code is not None:
+                    if auth_code == 'correct':
                         st.success("Transaction confirmed!")
                         do_transaction(amount, type)
                     else:
-                        st.error("Authentication code is required to confirm the transaction.")
+                        st.error("Transaction not confirmed. Please check your authentication code.")
             else:
                 st.success("No fraud detected.")
                 do_transaction(amount, type)
