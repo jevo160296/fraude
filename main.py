@@ -9,7 +9,7 @@ def train(project_path, start_from, end_at):
     _train(project_path=project_path, start_from=start_from, end_at=end_at)
 
 def _train(project_path, start_from, end_at):
-    from fraude.pipelines import get_data_pipeline, clean_data_pipeline, add_features_pipeline, train_model_pipeline, evaluate_model_pipeline, predict_pipeline, single_predict_pipeline
+    from fraude.pipelines import get_data_pipeline, clean_data_pipeline, add_features_pipeline, train_model_pipeline, evaluate_model_pipeline
     from fraude.menu import menu, get_functions
     project_path = Path(project_path).resolve()
     options = {
@@ -39,8 +39,7 @@ def inference(project_path):
     print(f"Predictions saved to {prediction_path}")
 
 def _inference(project_path: Path):
-    from fraude.pipelines import get_data_pipeline, clean_data_pipeline, add_features_pipeline, train_model_pipeline, evaluate_model_pipeline, predict_pipeline, single_predict_pipeline
-    from fraude.menu import menu, get_functions
+    from fraude.pipelines import predict_pipeline
     _, prediction_path = predict_pipeline(project_path)
     return prediction_path
 
@@ -62,8 +61,7 @@ def _single_inference(project_path, amount, type):
     """
     Run a single inference pipeline.
     """
-    from fraude.pipelines import get_data_pipeline, clean_data_pipeline, add_features_pipeline, train_model_pipeline, evaluate_model_pipeline, predict_pipeline, single_predict_pipeline
-    from fraude.menu import menu, get_functions
+    from fraude.pipelines import single_predict_pipeline
     project_path = Path(project_path).resolve()
     y = single_predict_pipeline(project_path, amount, type)
     return y
