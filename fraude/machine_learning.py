@@ -101,27 +101,30 @@ def calculate_metrics(conf_matrix):
     tn, fp, fn, tp = conf_matrix.ravel()
 
     accuracy = (tp + tn) / (tp + tn + fp + fn)
+    # precision also known as positive predictive value (PPV)
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+    # specificity also known as negative predictive value (NPV)
+    specificity = tn / (tn + fn) if (tn + fn) > 0 else 0
+    # recall also known as sensitivity or true positive rate (TPR)
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0
-    f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
     false_positive_rate = fp / (fp + tn) if (fp + tn) > 0 else 0
-    false_negative_rate = fn / (fn + tp) if (fn + tp) > 0 else 0
+    f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
     error_rate = 1 - accuracy
 
-    return {
+    return { name: (float(value) if value is not None else None) for name, value in {
             "tn": tn,
             "fp": fp,
             "fn": fn,
             "tp": tp,
             "total": tn + fp + fn + tp,
-            "accuracy": accuracy,
             "precision": precision,
+            "specificity": specificity,
             "recall": recall,
-            "f1_score": f1_score,
             "false_positive_rate": false_positive_rate,
-            "false_negative_rate": false_negative_rate,
+            "f1_score": f1_score,
+            "accuracy": accuracy,
             "error_rate": error_rate
-        }
+        }.items() }
 
 def print_metrics(metrics):
     """
@@ -131,7 +134,7 @@ def print_metrics(metrics):
         metrics (dict): Diccionario con las métricas calculadas.
     """
     int_metrics = ["tn", "fp", "fn", "tp", "total"]
-    float_metrics = ["accuracy", "precision", "recall", "f1_score", "false_positive_rate", "false_negative_rate", "error_rate"]
+    float_metrics = ["precision", "specificity", "recall", "false_positive_rate","f1_score", "accuracy", "error_rate"]
     for metric_name in int_metrics:
         if metric_name in metrics:
             print(f"{metric_name}: {metrics[metric_name]}")
