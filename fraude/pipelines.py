@@ -62,7 +62,7 @@ def evaluate_model_pipeline(project_path):
     """
     print(theme.pipeline_status("Evaluate model", "RUNNING"))
     from fraude import predict, evaluate, get_features, get_target, split, features_extract, calculate_metrics, print_metrics
-    from fraude.catalog import load_features_data, load_model, load_transformer
+    from fraude.catalog import load_features_data, load_model, load_transformer, save_model_metrics
     fraude = load_features_data(project_path)
     model = load_model(project_path)
     transformer = load_transformer(project_path)
@@ -89,6 +89,10 @@ def evaluate_model_pipeline(project_path):
     print_metrics(metrics_train)
     print(bcolors.stylize("Metrics for test set:", bcolors.HEADER))
     print_metrics(metrics_test)
+    save_model_metrics(project_path, {
+        'train': metrics_train,
+        'test': metrics_test
+    })
     return metrics_train, metrics_test
 
 def predict_pipeline(project_path):
