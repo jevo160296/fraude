@@ -150,3 +150,13 @@ def save_model_metrics(project_path: Path, metrics: dict):
     path = get_model_metrics_path(project_path)
     with open(path, 'w+') as file:
         yaml.safe_dump(metrics, file)
+
+def load_model_metrics(project_path: Path):
+    """
+    Carga las métricas del modelo desde un archivo yaml
+    """
+    import yaml
+    path = get_model_metrics_path(project_path)
+    with open(path, 'r') as file:
+        metrics = yaml.safe_load(file)
+    return metrics
