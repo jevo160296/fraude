@@ -17,9 +17,11 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "click>=8.1.8",
+    "imbalanced-learn>=0.13.0",
     "kagglehub[pandas-datasets]>=0.3.12",
     "scikit-learn>=1.6.1",
     "streamlit>=1.45.0",
+    "xgboost>=3.0.2",
 ]
 
 [dependency-groups]
