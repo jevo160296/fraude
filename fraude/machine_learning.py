@@ -4,6 +4,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import OneHotEncoder
+from xgboost import XGBClassifier
+from sklearn.naive_bayes import GaussianNB
+from imblearn.over_sampling import SMOTE
 
 def split(dataframe: DataFrame, train_size: float=0.7):
     """
@@ -53,8 +56,11 @@ def train(features: DataFrame, target: DataFrame):
     Returns:
         RandomForestClassifier: Modelo entrenado.
     """
-    model = RandomForestClassifier(random_state=42, n_jobs=-1,class_weight={0: 1, 1: 5})
-    model.fit(features, target)
+    model = XGBClassifier(objective='binary:logistic')
+    #model = GaussianNB()
+    sm = SMOTE(random_state=42)
+    features_res, target_res = sm.fit_resample(features, target)
+    model.fit(features_res, target_res)
     return model
 
 def predict(features: DataFrame, model):

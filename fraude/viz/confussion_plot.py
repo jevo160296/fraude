@@ -11,6 +11,7 @@ def plot_confussion(
         value_column: str,
         vertical_ascending: bool = False,
         horizontal_ascending: bool = False,
+        title: str = "Marimekko Confusion Matrix"
     ) -> None:
     """
     This function creates a Marimekko plot from a confusion matrix.
@@ -67,4 +68,5 @@ def plot_confussion(
         tickvals=np.cumsum(widths)-widths/2,
         ticktext= ["%s<br>%d" % (l, w) for l, w in zip(h_tags, widths)]
     )
+    fig.update_layout(title=title)
     fig.show()

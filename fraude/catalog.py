@@ -4,6 +4,12 @@ from pathlib import Path
 import joblib
 from numpy import ndarray
 
+def model_name():
+    #return "xgboost"
+    #return "random_forest"
+    #return "xgboost_SMOTE"
+    return "naive_bayes_reampled"
+
 def get_fraude_path(project_path):
     path = project_path / 'data/input/Fraud.csv'
     if not path.parent.exists():
@@ -76,12 +82,8 @@ def load_features_data(project_path: Path):
     path = get_features_data_path(project_path)
     return pd.read_csv(path, parse_dates=['date'])
 
-def model_name():
-    #return "xgboost"
-    return "random_forest"
-
-def get_model_path(project_path: Path):
-    path = project_path / f"models/model_{model_name()}.jbl"
+def get_model_path(project_path: Path, model_name=model_name()):
+    path = project_path / f"models/model_{model_name}.jbl"
     if not path.parent.exists():
         path.parent.mkdir(parents=True)
     return path
@@ -140,27 +142,27 @@ def load_transformer(project_path: Path):
     path = get_transformer_path(project_path)
     return joblib.load(path)
 
-def get_model_metrics_path(project_path: Path):
-    path = project_path / f"models/model_metrics_{model_name()}.yaml"
+def get_model_metrics_path(project_path: Path, model_name=model_name()):
+    path = project_path / f"models/model_metrics_{model_name}.yaml"
     if not path.parent.exists():
         path.parent.mkdir(parents=True)
     return path
 
-def save_model_metrics(project_path: Path, metrics: dict):
+def save_model_metrics(project_path: Path, metrics: dict, model_name=model_name()):
     """
     Guarda las métricas del modelo en formato yaml
     """
     import yaml
-    path = get_model_metrics_path(project_path)
+    path = get_model_metrics_path(project_path, model_name=model_name)
     with open(path, 'w+') as file:
         yaml.safe_dump(metrics, file)
 
-def load_model_metrics(project_path: Path):
+def load_model_metrics(project_path: Path, model_name=model_name()):
     """
     Carga las métricas del modelo desde un archivo yaml
     """
     import yaml
-    path = get_model_metrics_path(project_path)
+    path = get_model_metrics_path(project_path, model_name=model_name)
     with open(path, 'r') as file:
         metrics = yaml.safe_load(file)
     return metrics
