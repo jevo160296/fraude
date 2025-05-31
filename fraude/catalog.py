@@ -76,8 +76,12 @@ def load_features_data(project_path: Path):
     path = get_features_data_path(project_path)
     return pd.read_csv(path, parse_dates=['date'])
 
+def model_name():
+    #return "xgboost"
+    return "random_forest"
+
 def get_model_path(project_path: Path):
-    path = project_path / "models/model.jbl"
+    path = project_path / f"models/model_{model_name()}.jbl"
     if not path.parent.exists():
         path.parent.mkdir(parents=True)
     return path
@@ -137,7 +141,7 @@ def load_transformer(project_path: Path):
     return joblib.load(path)
 
 def get_model_metrics_path(project_path: Path):
-    path = project_path / "models/model_metrics.yaml"
+    path = project_path / f"models/model_metrics_{model_name()}.yaml"
     if not path.parent.exists():
         path.parent.mkdir(parents=True)
     return path
