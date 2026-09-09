@@ -27,6 +27,16 @@ Follow the steps below to set up and run the project:
     ```
 
 4. **Run the main script**  
+There are two ways of running the script
+
+    **Running in a command window**
+
     ```bash
     python -m main
+    ```
+
+    **Running it as a streamlit web page**
+
+    ```bash
+    streamlit run index.py
     ```
